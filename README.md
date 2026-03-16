@@ -1,1 +1,1 @@
-# ShinHyerin_1st_project
+# ShinHyerin_1st_Project
