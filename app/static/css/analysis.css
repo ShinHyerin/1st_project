@@ -1,0 +1,225 @@
+/* 전체 섹션 설정 */
+.analysis-section {
+    padding: 80px 40px; /* py-20 px-10 */
+    max-width: 1280px; /* max-w-7xl */
+    margin: 0 auto;
+    margin-top: 60px; /* 상단바 여백 */
+}
+
+body {
+    background: linear-gradient(135deg, #e0f2fe, #ede9fe, #f0fdf4);
+    min-height: 100vh;
+}
+
+/* 헤더 스타일 */
+.analysis-header {
+    text-align: center;
+    margin-bottom: 48px; /* mb-12 */
+}
+
+.header-title {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.header-subtitle {
+    color: rgba(0,0,0,0.6);
+}
+
+/* 폼 그리드 레이아웃 (반응형) */
+.analysis-form {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 기본 모바일 1열 */
+    gap: 24px; /* gap-6 */
+}
+
+/* 입력 카드 디자인 */
+.input-card {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.input-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 40px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.card-category {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.dot-icon {
+    display: inline-block;
+    width: 1em;       /* 아이콘 영역 고정 */
+    font-size: 14px;   /* 도형 크기 조절 */
+    margin-right: 8px;
+    vertical-align: middle; /* 텍스트와 높이 맞춤 */
+}
+
+/* 색상 클래스들 */
+/* 세련된 톤으로 구성한 예시 */
+.dot-red    { color: #ef4444; } /* ● 위험/주의 */
+.dot-yellow { color: #facc15; } /* ▲ 경고/대기 */
+.dot-green  { color: #22c55e; } /* ■ 정상/안전 */
+.dot-blue   { color: #3b82f6; } /* ◆ 정보/확인 */
+
+/* 입력 항목 간격 */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* space-y-5 */
+}
+
+.input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px 16px; /* 👈 증가 */
+    font-size: 1rem;     /* 👈 증가 */
+
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.input-field:focus {
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow:
+        0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* 제출 버튼 영역 */
+.submit-container {
+    margin-top: 48px;
+    display: flex;
+    justify-content: center; /* 👈 가운데 */
+}
+
+.submit-btn {
+    width: 100%;
+    max-width: 420px; /* 👈 너무 길지 않게 */
+
+    padding: 18px 24px; /* 👈 크게 */
+    font-size: 1.2rem;  /* 👈 크게 */
+    font-weight: 700;
+
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(10px);
+
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+    transition: all 0.25s ease;
+
+    color: white;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(17, 24, 39, 1);
+}
+
+
+/* 프리셋 컨테이너 */
+.preset-container {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+
+    margin-bottom: 40px; /* 👈 이거 추가 (핵심) */
+    padding: 28px; /* 살짝 키움 */
+    max-width: 900px;
+    margin: 0 auto 40px auto; /* 가운데 정렬 + 아래 간격 */
+    text-align: center;
+
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+.preset-label {
+    font-size: 0.95rem;
+    color: #4b5563;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.preset-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.preset-btn {
+    padding: 10px 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 9999px; /* 알약 모양 */
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 각 버튼별 호버 색상 강조 (선택 사항) */
+.btn-slim:hover { border-color: #ef4444; color: #ef4444; }
+.btn-active:hover { border-color: #3b82f6; color: #3b82f6; }
+.btn-care:hover { border-color: #facc15; color: #facc15; }
+
+/* 반응형 모바일 대응 */
+@media (max-width: 640px) {
+    .preset-btn {
+        width: 100%;
+    }
+}
+
+/* 반응형 미디어 쿼리 */
+@media (min-width: 768px) {
+    .analysis-form {
+        grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+    }
+    .submit-container {
+        grid-column: span 2; /* md:col-span-2 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .analysis-form {
+        grid-template-columns: repeat(4, 1fr); /* lg:grid-cols-4 */
+    }
+    .submit-container {
+        grid-column: span 4; /* lg:col-span-4 */
+    }
+}

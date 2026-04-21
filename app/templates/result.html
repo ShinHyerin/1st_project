@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}생성형 AI 기반 건강 유형 분석 서비스{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<main class="result-container">
+
+    <div class="report-hero-card">
+        <div class="hero-content">
+            <p class="hero-tag">건강 분석 리포트</p>
+                <h1 class="hero-main-title">
+                    당신은
+                    <span class="highlight-text
+                        {% if cluster_name == '슬림한 저활동군' %}type-slim
+                        {% elif cluster_name == '에너지 뿜뿜 운동가' %}type-active
+                        {% elif cluster_name == '집중 관리 필요군' %}type-care
+                        {% endif %}
+                    ">
+                        {{ cluster_name }}
+                    </span> 입니다.
+                </h1>
+            <p class="hero-feedback">{{ feedback }}</p>
+        </div>
+        <div class="hero-bg-decoration"></div>
+    </div>
+
+
+
+    <div class="warning-card">
+        <h3 class="card-title text-danger">
+            <span class="icon">&#8251;</span> AI 중점 관리 지표
+        </h3>
+        <div class="warning-content">
+            <div class="warning-item">
+<!--                <div class="warning-dot"></div>-->
+                <p class="warning-text">{{ warning_msg }}</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="result-detail-grid">
+        <div class="result-card chart-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-blue">●</span> 그룹 내 나의 위치
+            </h3>
+            <div class="chart-wrapper">
+                <img src="{{ url_for('static', filename='images/scatter_plot.png', v=range(1, 1000)|random) }}"
+                     alt="건강 데이터 분석 차트" class="analysis-plot">
+            </div>
+        </div>
+
+
+        <div class="result-card solution-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-green">●</span> 건강 솔루션
+            </h3>
+            <div class="solution-list">
+                <div class="solution-box bg-light-green">
+                    <h4 class="solution-label text-green">오늘의 실천 과제</h4>
+                    <p class="solution-text">{{ solutions['task'] }}</p>
+                </div>
+
+                <div class="solution-box bg-light-blue">
+                    <h4 class="solution-label text-blue">추천 운동</h4>
+                    <p class="solution-text">{{ solutions['exercise'] }}</p>
+                </div>
+
+                <div class="solution-box bg-light-purple">
+                    <h4 class="solution-label text-purple">생활 습관</h4>
+                    <p class="solution-text">{{ solutions['habit'] }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="result-grid">
+
+        <div class="info-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-red">●</span> 신체 정보
+            </h3>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <label class="info-label">키</label>
+                    <div class="info-value">
+                        {{ user_height }} <span class="unit">cm</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label">몸무게</label>
+                    <div class="info-value">
+                        {{ user_weight }} <span class="unit">kg</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label">BMI</label>
+                    <div class="info-value">
+                        {{ user_bmi }} <span class="unit">kg/m<sup>2</sup></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="info-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-yellow">●</span> 활동 패턴
+            </h3>
+
+            <div class="info-list">
+                <div class="info-item">
+
+                    <div>
+                        <label class="info-label">고강도 활동</label>
+                        <div class="info-value">
+                            {{ user_high_active }} <span class="unit">분</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="info-label">중강도 활동</label>
+                        <div class="info-value">
+                            {{ user_mid_active }} <span class="unit">분</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="info-label">앉아있는 시간</label>
+                        <div class="info-value">
+                            {{ user_sitting }} <span class="unit">분</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="info-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-green">●</span> 영양 상태
+            </h3>
+
+            <div class="info-list">
+                <div class="info-item">
+
+                    <div>
+                        <label class="info-label">하루 총 열량</label>
+                        <div class="info-value">
+                            {{ user_energy }} <span class="unit">kcal</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="info-label">하루 지방 섭취량</label>
+                        <div class="info-value">
+                            {{ user_fat }} <span class="unit">g</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="info-label">하루 나트륨 섭취량</label>
+                        <div class="info-value">
+                            {{ user_na }} <span class="unit">mg</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="info-label">하루 당류 섭취량</label>
+                        <div class="info-value">
+                            {{ user_sugar }} <span class="unit">g</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="input-card">
+            <h3 class="card-title">
+                <span class="dot-icon dot-blue">●</span> 혈관 건강
+            </h3>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <div>
+                        <label class="info-label">LDL 콜레스테롤</label>
+                        <div class="info-value">
+                            {{ user_ldl }} <span class="unit">mg/dL</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="info-label">HDL 콜레스테롤</label>
+                        <div class="info-value">
+                            {{ user_hdl }} <span class="unit">mg/dL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<button type="button" class="btn-save" onclick="saveAsImage()">리포트 이미지로 저장</button>
+
+</main>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
+{% endblock %}
+
+
+</body>
+</html>
