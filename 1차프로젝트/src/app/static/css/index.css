@@ -1,0 +1,1872 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    /* overflow-x: hidden만 남기고 나머지는 브라우저 기본 스크롤을 따르게 합니다. */
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #fdfcff, #f5f3ff, #f0fdf4);
+    background-attachment: fixed; /* 배경을 화면에 고정 */
+    background-size: cover;
+}
+
+/* 슬라이더 컨테이너 (스크롤 가능하게 설정) */
+.hero-slider {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    /* overflow: hidden은 슬라이더 내부의 좌우 복제본을 숨기는 용도로만 작동해야 합니다. */
+    overflow: hidden;
+    /*scroll-snap-type: x mandatory; *//* 슬라이드처럼 딱딱 걸리게 함 */
+
+}
+
+.slider-wrapper {
+    display: flex;
+    /* 슬라이드 개수가 2개면 200%, 3개면 300%로 설정되어 있어야 합니다. */
+    width: 100%;
+    height: 100%;
+    /* transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); */ /* 조금 더 빠른 전환 속도 */
+    will-change: transform; /* 브라우저 최적화 */
+}
+
+.slide {
+    min-width: 100%;
+    flex-shrink: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;    /* 세로 중앙 */
+    justify-content: center; /* 가로 중앙 */
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.slide.bg-1 {
+    background-image: url('../images/fruits2.png');
+}
+
+.slide.bg-2 {
+    background-image: url('../images/fruits3.png');
+}
+
+.slide.bg-3 {
+    background-image: url('../images/fruits4.png');
+}
+
+
+/* 화살표 공통 스타일 */
+.slide-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; /* 슬라이드보다 위에 배치 */
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #333;
+    font-size: 2rem;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.slide-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 왼쪽 화살표 */
+.prev-btn {
+    left: 30px;
+}
+
+/* 오른쪽 화살표 */
+.next-btn {
+    right: 30px;
+}
+
+/* 모바일에서는 화살표 크기를 조금 줄임 */
+@media (max-width: 768px) {
+    .slide-arrow {
+        padding: 10px 15px;
+        font-size: 1.5rem;
+    }
+    .prev-btn { left: 10px; }
+    .next-btn { right: 10px; }
+}
+
+/* 1. 스크롤 부모 컨테이너 */
+.scroll-container {
+    width: 100%;
+    /* height: 100vh; 를 제거하거나 auto로 변경하여 자식 요소들의 높이만큼 늘어나게 합니다. */
+    height: 100vh;
+    overflow-y: scroll; /* 스크롤이 가능하도록 변경 */
+    scroll-snap-type: y mandatory; /* Y축 강제 스냅 */
+    scroll-behavior: smooth;       /* 부드러운 이동 효과 추가 */
+    scrollbar-width: none;         /* 스크롤바 숨기기 (Firefox) */
+    background: linear-gradient(135deg, #fdfcff, #f5f3ff, #f0fdf4);
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;                 /* 스크롤바 숨기기 (Chrome) */
+}
+
+/* 2. 각 섹션 */
+.scroll-section {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    flex-shrink: 0; /* 높이가 줄어들지 않도록 방지 */
+    scroll-snap-align: start;      /* 섹션 시작점에 자석처럼 붙음 */
+    scroll-snap-stop: always;      /* 한 번에 한 섹션만 넘어가도록 강제 */
+    background: transparent !important; /* 모든 개별 섹션 배경을 투명으로 */
+}
+
+.section-1 {
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.4),
+        rgba(255,255,255,0.8)
+    );
+}
+
+.section-2 {
+    background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f9fafb 100%
+    );
+    backdrop-filter: blur(0px); /* 레이어 분리용 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+/* 배경 스타일 */
+/* 배경이 너무 밝아 글자가 안 보이는 것을 방지하는 어두운 필터 */
+.bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05); /* 살짝 어둡게 */
+    z-index: 10;
+}
+
+.bg-gradient-light {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* 유리창 효과 카드 (Slide 1) */
+.glass-card {
+    position: relative;
+    z-index: 10;
+    width: 85%; /* 모바일 대응을 위해 % 사용 */
+    max-width: 900px;
+
+    /* 애플 스타일 유리 효과 */
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 40px; /* 더 둥글게 */
+    padding: 60px 40px;
+    text-align: center;
+
+    /* 부드러운 그림자 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.4),
+        transparent
+    );
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* --- 텍스트 스타일 --- */
+.label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d1d1f; /* 애플 텍스트 색상 */
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    display: block;
+    z-index: 10;
+}
+
+.hero-title {
+    font-size: 3.5rem; /* 더 크게 */
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111;
+    margin-bottom: 50px;
+    letter-spacing: -0.02em; /* 자간을 살짝 좁혀 더 세련되게 */
+    z-index: 10;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    /* overflow-x: hidden만 남기고 나머지는 브라우저 기본 스크롤을 따르게 합니다. */
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #fdfcff, #f5f3ff, #f0fdf4);
+    background-attachment: fixed; /* 배경을 화면에 고정 */
+    background-size: cover;
+}
+
+/* 슬라이더 컨테이너 (스크롤 가능하게 설정) */
+.hero-slider {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    /* overflow: hidden은 슬라이더 내부의 좌우 복제본을 숨기는 용도로만 작동해야 합니다. */
+    overflow: hidden;
+    /*scroll-snap-type: x mandatory; *//* 슬라이드처럼 딱딱 걸리게 함 */
+
+}
+
+.slider-wrapper {
+    display: flex;
+    /* 슬라이드 개수가 2개면 200%, 3개면 300%로 설정되어 있어야 합니다. */
+    width: 100%;
+    height: 100%;
+    /* transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); */ /* 조금 더 빠른 전환 속도 */
+    will-change: transform; /* 브라우저 최적화 */
+}
+
+.slide {
+    min-width: 100%;
+    flex-shrink: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;    /* 세로 중앙 */
+    justify-content: center; /* 가로 중앙 */
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.slide.bg-1 {
+    background-image: url('../images/fruits2.png');
+}
+
+.slide.bg-2 {
+    background-image: url('../images/fruits3.png');
+}
+
+.slide.bg-3 {
+    background-image: url('../images/fruits4.png');
+}
+
+
+/* 화살표 공통 스타일 */
+.slide-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; /* 슬라이드보다 위에 배치 */
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #333;
+    font-size: 2rem;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.slide-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 왼쪽 화살표 */
+.prev-btn {
+    left: 30px;
+}
+
+/* 오른쪽 화살표 */
+.next-btn {
+    right: 30px;
+}
+
+/* 모바일에서는 화살표 크기를 조금 줄임 */
+@media (max-width: 768px) {
+    .slide-arrow {
+        padding: 10px 15px;
+        font-size: 1.5rem;
+    }
+    .prev-btn { left: 10px; }
+    .next-btn { right: 10px; }
+}
+
+/* 1. 스크롤 부모 컨테이너 */
+.scroll-container {
+    width: 100%;
+    /* height: 100vh; 를 제거하거나 auto로 변경하여 자식 요소들의 높이만큼 늘어나게 합니다. */
+    height: 100vh;
+    overflow-y: scroll; /* 스크롤이 가능하도록 변경 */
+    scroll-snap-type: y mandatory; /* Y축 강제 스냅 */
+    scroll-behavior: smooth;       /* 부드러운 이동 효과 추가 */
+    scrollbar-width: none;         /* 스크롤바 숨기기 (Firefox) */
+    background: linear-gradient(135deg, #fdfcff, #f5f3ff, #f0fdf4);
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;                 /* 스크롤바 숨기기 (Chrome) */
+}
+
+/* 2. 각 섹션 */
+.scroll-section {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    flex-shrink: 0; /* 높이가 줄어들지 않도록 방지 */
+    scroll-snap-align: start;      /* 섹션 시작점에 자석처럼 붙음 */
+    scroll-snap-stop: always;      /* 한 번에 한 섹션만 넘어가도록 강제 */
+    background: transparent !important; /* 모든 개별 섹션 배경을 투명으로 */
+}
+
+.section-1 {
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.4),
+        rgba(255,255,255,0.8)
+    );
+}
+
+.section-2 {
+    background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f9fafb 100%
+    );
+    backdrop-filter: blur(0px); /* 레이어 분리용 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+/* 배경 스타일 */
+/* 배경이 너무 밝아 글자가 안 보이는 것을 방지하는 어두운 필터 */
+.bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05); /* 살짝 어둡게 */
+    z-index: 10;
+}
+
+.bg-gradient-light {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* 유리창 효과 카드 (Slide 1) */
+.glass-card {
+    position: relative;
+    z-index: 10;
+    width: 85%; /* 모바일 대응을 위해 % 사용 */
+    max-width: 900px;
+
+    /* 애플 스타일 유리 효과 */
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 40px; /* 더 둥글게 */
+    padding: 60px 40px;
+    text-align: center;
+
+    /* 부드러운 그림자 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.4),
+        transparent
+    );
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* --- 텍스트 스타일 --- */
+.label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d1d1f; /* 애플 텍스트 색상 */
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    display: block;
+    z-index: 10;
+}
+
+.hero-title {
+    font-size: 3.5rem; /* 더 크게 */
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111;
+    margin-bottom: 50px;
+    letter-spacing: -0.02em; /* 자간을 살짝 좁혀 더 세련되게 */
+    z-index: 10;
+}
+
+/* 그리드 레이아웃 (Slide 2) */
+/* Slide 2 전용 레이아웃 설정 */
+.slide-grid {
+    justify-content: flex-start; /* 콘텐츠를 왼쪽부터 배치 */
+    padding-left: 8%; /* 왼쪽 여백 확보 */
+}
+
+/* 왼쪽에서부터 오는 부드러운 흰색 그라데이션 (글자 가독성 확보) */
+.bg-gradient-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%; /* 화면의 절반 이상을 부드럽게 덮음 */
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
+    z-index: 1;
+}
+
+.grid-container {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 1:1 비율로 나누되 오른쪽은 비움 */
+    gap: 0;
+    align-items: center;
+}
+
+
+/* 콘텐츠 왼쪽 배치 */
+.content-left {
+    max-width: 550px; /* 텍스트가 너무 퍼지지 않게 제한 */
+    text-align: left;
+}
+
+/* ⭐ 세 번째 슬라이드 전용 스타일 추가 ⭐ */
+.slide-quote {
+    background-color: #fffdf7; /* 배경 이미지와 어우러지는 따뜻한 베이지톤 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 은은한 안개 효과 오버레이 */
+.bg-overlay-soft {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.6) 100%);
+    z-index: 1;
+}
+
+.bg-overlay-light {
+    position: absolute;
+    inset: 0;
+    background-color: #f9fafb; /* 아주 연한 회색 오버레이 */
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.quote-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1000px;
+    padding: 0 40px;
+}
+
+/* 인용구 래퍼 및 장식 */
+.quote-wrapper {
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.quote-mark {
+    position: absolute;
+    font-size: 5rem;
+    color: #ffd28d; /* 강조색 (복숭아/망고 톤) */
+    font-family: 'Georgia', serif;
+    opacity: 0.5;
+}
+
+.quote-mark.start { top: -40px; left: -20px; }
+.quote-mark.end { bottom: -60px; right: -20px; }
+
+.hero-quote-text {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1d1d1f;
+    letter-spacing: -0.03em;
+    word-break: keep-all;
+}
+
+.hero-quote-text strong {
+    color: #000;
+    background: linear-gradient(transparent 70%, #fff1eb 30%); /* 텍스트 강조 밑줄 */
+}
+
+/* 프로필 영역 디자인 */
+.quote-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(255, 153, 102, 0.15); /* 은은한 주황빛 그림자 */
+}
+
+.bg-peach {
+    background: linear-gradient(135deg, #fff1eb 0%, #ffd2c1 100%);
+}
+
+.avatar-emoji {
+    font-size: 2rem;
+}
+
+.profile-info {
+    text-align: left;
+}
+
+.profile-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 4px 0;
+}
+
+.profile-title {
+    font-size: 0.95rem;
+    color: #86868b; /* 애플 특유의 보조 텍스트 색상 */
+    margin: 0;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .hero-quote-text {
+        font-size: 2rem;
+    }
+    .quote-mark {
+        font-size: 3rem;
+    }
+    .profile-avatar {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+
+/* ----------------------------------------------- */
+
+.grid-title {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 50px;
+    color: #1d1d1f;
+    word-break: keep-all; /* 한글 단어 끊김 방지 */
+}
+
+.info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 카드 디자인: 애플 스타일 유리 효과 */
+.info-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 30px;
+    border-radius: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    color: #111;
+}
+
+.info-card p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin: 0;
+}
+
+.dot, .diamond {
+    color: #60a5fa;
+    margin-right: 12px;
+}
+
+/* 버튼 공통 */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 아이콘 색상 커스텀 */
+.dot.blue, .diamond.blue {
+    color: #007aff; /* iOS Blue */
+    margin-right: 12px;
+}
+
+/* 버튼 디자인 */
+.btn-black {
+    background-color: #1d1d1f;
+    color: white;
+    padding: 18px 40px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-black:hover {
+    background-color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+
+/* 모바일 대응: 모바일에서는 다시 중앙 정렬 */
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .content-left {
+        max-width: 100%;
+        padding-right: 8%;
+    }
+    .grid-title {
+        font-size: 2.8rem;
+    }
+    .bg-gradient-left {
+        width: 100%;
+        background: rgba(255,255,255,0.6);
+    }
+}
+/*------------------------------------------------------------*/
+
+/* 분석 섹션 레이아웃 */
+.analysis-preview-section {
+    min-height: 100vh; /* height 대신 min-height 사용 */
+    height: auto;
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 유지 */
+    padding: 50px 10%; /* 위아래 여백을 주어 여유 확보 */
+    background: linear-gradient(
+        135deg,
+        #f0f9ff 0%,
+        #f5f3ff 50%,
+        #ecfdf5 100%
+    );
+    backdrop-filter: blur(0px); /* 레이어 분리용 */
+}
+
+.analysis-container {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+/* 왼쪽 그래프 영역 */
+.visual-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #111827;
+}
+
+.visual-desc {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* 그래프를 감싸는 박스 */
+.graph-box {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 400px; /* 박스가 찌그러지지 않게 최소 높이 설정 */
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+/* 실제 이미지 스타일 */
+.sample-graph {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 12px;
+}
+
+
+
+/* 이미지 로딩 실패 시 대비 */
+.sample-graph:not([src]), .sample-graph[src=""] {
+    width: 100%;
+    height: 300px;
+    background-color: #f3f4f6; /* 회색 박스로 표시 */
+    position: relative;
+}
+
+.graph-legend {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    justify-content: center;
+}
+
+.dot.g0 { color: #ffedd5; } /* 오렌지 계열 */
+.dot.g1 { color: #dcfce7; } /* 그린 계열 */
+.dot.g2 { color: #dbeafe; } /* 블루 계열 */
+.star { color: #374151; font-weight: bold; }
+
+/* 솔루션 아이템 디자인 (이미지 디자인 참고) */
+/* 오른쪽 피드백 영역 */
+.feedback-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.solution-item {
+    display: flex;
+    align-items: center;
+    padding: 25px 30px;
+    border-radius: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.step-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-right: 25px;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.sol-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #1f2937;
+}
+
+.sol-content p {
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+/* 색상별 스타일 (보내주신 사진 기반) */
+.solution-item.green {
+    background: linear-gradient(to right, #f0fdf4, #ffffff);
+    border-left: 6px solid #22c55e;
+}
+.solution-item.blue {
+    background: linear-gradient(to right, #eff6ff, #ffffff);
+    border-left: 6px solid #3b82f6;
+}
+.solution-item.purple {
+    background: linear-gradient(to right, #f5f3ff, #ffffff);
+    border-left: 6px solid #8b5cf6;
+}
+
+/* --- Reveal 애니메이션 핵심 CSS --- */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal-up {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/*-----------------------------------------------------------------*/
+
+/* 컨테이너 및 섹션 설정 */
+.nutrient-container {
+    background: transparent !important; /* 배경 삭제 */
+    backdrop-filter: none !important;
+    padding: 120px 20px 0 20px; /* 푸터와 붙이기 위해 하단 패딩 조절 */
+);
+
+    backdrop-filter: blur(0px); /* 레이어 분리 느낌 */
+    /* 헤더 높이를 고려하여 상단 여백을 120px 정도로 넉넉히 줍니다 */
+    padding: 120px 20px 60px 20px;
+}
+
+.nutrient-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 상단 텍스트 스타일 */
+.section-header {
+    text-align: center;
+    margin-bottom: 64px; /* mb-16 */
+}
+
+.section-title {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.section-subtitle {
+    font-size: 1.125rem; /* text-lg */
+    color: #6b7280; /* text-gray-500 */
+}
+
+/* 그리드 레이아웃 */
+.nutrient-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 기본 1열 (모바일) */
+    gap: 32px; /* gap-8 */
+}
+
+/* 카드 개별 스타일 */
+.nutrient-card {
+    background: #f9fafb; /* 가독성을 위한 연한 배경색 추가 가능 */
+    padding: 32px;
+    border-radius: 16px;
+    transition: transform 0.2s ease;
+}
+
+.quote {
+    color: #374151; /* text-gray-700 */
+    line-height: 1.625;
+    font-size: 1.125rem;
+    font-style: italic;
+}
+
+/* 카드 하단 정보 섹션 */
+.card-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 32px; /* mt-8 */
+}
+
+/* 푸터 영역(아이콘+이름) 정렬 */
+.card-footer-v2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: flex-start; /* 왼쪽 정렬 확인 */
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin-right: 12px;
+    font-size: 1.25rem;
+}
+
+/* 아이콘 박스 배경색 커스텀 */
+.bg-orange { background-color: #ffedd5; }
+.bg-blue { background-color: #eff6ff; }
+.bg-green { background-color: #f0fdf4; }
+
+.info-name {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 700;
+    color: #000;
+}
+
+.info-desc {
+    font-size: 0.75rem; /* text-xs */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+/* 미디어 쿼리: 태블릿 및 데스크톱 (md) */
+@media (min-width: 768px) {
+    .nutrient-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3열로 변경 */
+    }
+}
+
+/*------------------------------------------------------------*/
+
+/* 영양소 하이라이트 섹션 */
+.nutrient-highlights {
+    background: transparent !important; /* 배경 삭제 */
+    backdrop-filter: none !important;
+    padding: 60px 40px; /* 상하 여백만 유지 */
+    );
+
+    backdrop-filter: blur(0px); /* 레이어 분리 느낌 */
+}
+
+.nutrient-grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 모바일 1열 */
+    gap: 24px;
+}
+
+/* 카드 개별 스타일 (이미지 스타일 재현) */
+.nutrient-card-v2 {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.nutrient-card-v2:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.nutrient-quote {
+    font-size: 1.15rem;
+    color: #111;
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 60px;
+}
+
+/* 하단 프로필 영역 스타일 */
+.card-footer-v2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatar-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* 배경색 클래스 */
+.bg-orange { background-color: #fff1eb; }
+.bg-blue { background-color: #f0f7ff; }
+.bg-green { background-color: #f0fdf4; }
+
+
+/* 2. 영양소 이름(단백질, 지방, 나트륨) 왼쪽 정렬 및 스타일 */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+.user-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0;
+    /* 밑줄 효과가 나타나지 않도록 설정 */
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* 3. 마우스 호버 시에도 밑줄이 생기지 않도록 방지 */
+.nutrient-card-v2:hover .user-name,
+.user-name:hover {
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* 4. 카드 전체 레이아웃 미세 조정 */
+.nutrient-card-v2 {
+    background: #ffffff;
+    border: 1px solid #f2f2f7;
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+    text-align: left; /* 카드 내 모든 텍스트 기본 왼쪽 정렬 */
+}
+
+.nutrient-quote {
+    font-size: 1.05rem;
+    color: #4b5563;
+    line-height: 1.7;
+    font-weight: 400;
+    margin-bottom: 40px;
+    text-align: left; /* 설명글도 왼쪽 정렬 */
+}
+
+/* index_style.css 하단에 추가 */
+.reveal-left.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* 푸터 섹션 설정 */
+.footer-section {
+    /* 1. 화면 전체를 차지하지 않도록 높이를 내용만큼만 설정 */
+    height: auto;
+    min-height: 200px; /* 푸터 최소 높이 */
+
+    /* 2. 자석 효과(스냅)를 푸터의 '하단' 기준에 맞춤 */
+    scroll-snap-align: end;
+
+    /* 3. 상단 콘텐츠와 겹치지 않도록 레이아웃 정렬 */
+    display: block;
+    background: transparent !important;
+}
+
+/* 푸터 바로 위의 콘텐츠 섹션 */
+.scroll-section:not(.footer-section) {
+    height: 100vh;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    /*overflow: hidden;*/
+}
+
+.scroll-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 20% 30%,
+        rgba(255,255,255,0.4),
+        transparent 40%
+    );
+
+    z-index: 0;
+}
+
+/* 푸터 내부 스타일 (기존 유지) */
+.site-footer {
+    width: 100%;
+    padding: 40px 0; /* 여백을 적절히 조절하세요 */
+}
+
+
+/* 반응형 데스크톱 (3열) */
+@media (min-width: 1024px) {
+    .nutrient-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+
+
+/* 그리드 레이아웃 (Slide 2) */
+/* Slide 2 전용 레이아웃 설정 */
+.slide-grid {
+    justify-content: flex-start; /* 콘텐츠를 왼쪽부터 배치 */
+    padding-left: 8%; /* 왼쪽 여백 확보 */
+}
+
+/* 왼쪽에서부터 오는 부드러운 흰색 그라데이션 (글자 가독성 확보) */
+.bg-gradient-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%; /* 화면의 절반 이상을 부드럽게 덮음 */
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
+    z-index: 1;
+}
+
+.grid-container {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 1:1 비율로 나누되 오른쪽은 비움 */
+    gap: 0;
+    align-items: center;
+}
+
+
+/* 콘텐츠 왼쪽 배치 */
+.content-left {
+    max-width: 550px; /* 텍스트가 너무 퍼지지 않게 제한 */
+    text-align: left;
+}
+
+/* ⭐ 세 번째 슬라이드 전용 스타일 추가 ⭐ */
+.slide-quote {
+    background-color: #fffdf7; /* 배경 이미지와 어우러지는 따뜻한 베이지톤 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 은은한 안개 효과 오버레이 */
+.bg-overlay-soft {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.6) 100%);
+    z-index: 1;
+}
+
+.bg-overlay-light {
+    position: absolute;
+    inset: 0;
+    background-color: #f9fafb; /* 아주 연한 회색 오버레이 */
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.quote-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1000px;
+    padding: 0 40px;
+}
+
+/* 인용구 래퍼 및 장식 */
+.quote-wrapper {
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.quote-mark {
+    position: absolute;
+    font-size: 5rem;
+    color: #ffd28d; /* 강조색 (복숭아/망고 톤) */
+    font-family: 'Georgia', serif;
+    opacity: 0.5;
+}
+
+.quote-mark.start { top: -40px; left: -20px; }
+.quote-mark.end { bottom: -60px; right: -20px; }
+
+.hero-quote-text {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1d1d1f;
+    letter-spacing: -0.03em;
+    word-break: keep-all;
+}
+
+.hero-quote-text strong {
+    color: #000;
+    background: linear-gradient(transparent 70%, #fff1eb 30%); /* 텍스트 강조 밑줄 */
+}
+
+/* 프로필 영역 디자인 */
+.quote-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(255, 153, 102, 0.15); /* 은은한 주황빛 그림자 */
+}
+
+.bg-peach {
+    background: linear-gradient(135deg, #fff1eb 0%, #ffd2c1 100%);
+}
+
+.avatar-emoji {
+    font-size: 2rem;
+}
+
+.profile-info {
+    text-align: left;
+}
+
+.profile-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 4px 0;
+}
+
+.profile-title {
+    font-size: 0.95rem;
+    color: #86868b; /* 애플 특유의 보조 텍스트 색상 */
+    margin: 0;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .hero-quote-text {
+        font-size: 2rem;
+    }
+    .quote-mark {
+        font-size: 3rem;
+    }
+    .profile-avatar {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+
+/* ----------------------------------------------- */
+
+.grid-title {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 50px;
+    color: #1d1d1f;
+    word-break: keep-all; /* 한글 단어 끊김 방지 */
+}
+
+.info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 카드 디자인: 애플 스타일 유리 효과 */
+.info-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 30px;
+    border-radius: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    color: #111;
+}
+
+.info-card p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin: 0;
+}
+
+.dot, .diamond {
+    color: #60a5fa;
+    margin-right: 12px;
+}
+
+/* 버튼 공통 */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 아이콘 색상 커스텀 */
+.dot.blue, .diamond.blue {
+    color: #007aff; /* iOS Blue */
+    margin-right: 12px;
+}
+
+/* 버튼 디자인 */
+.btn-black {
+    background-color: #1d1d1f;
+    color: white;
+    padding: 18px 40px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-black:hover {
+    background-color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+
+/* 모바일 대응: 모바일에서는 다시 중앙 정렬 */
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .content-left {
+        max-width: 100%;
+        padding-right: 8%;
+    }
+    .grid-title {
+        font-size: 2.8rem;
+    }
+    .bg-gradient-left {
+        width: 100%;
+        background: rgba(255,255,255,0.6);
+    }
+}
+/*------------------------------------------------------------*/
+
+/* 분석 섹션 레이아웃 */
+.analysis-preview-section {
+    width: 100%;
+    min-height: 100vh; /* height 대신 min-height 사용 */
+    height: auto;
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 유지 */
+    padding: 50px 10%; /* 위아래 여백을 주어 여유 확보 */
+    background: linear-gradient(
+        135deg,
+        #f0f9ff 0%,
+        #f5f3ff 50%,
+        #ecfdf5 100%
+    );
+    backdrop-filter: blur(0px); /* 레이어 분리용 */
+    justify-content: center;
+}
+
+.analysis-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 왼쪽 그래프 영역 */
+.visual-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #111827;
+}
+
+.visual-desc {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* 그래프를 감싸는 박스 */
+.graph-box {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 400px; /* 박스가 찌그러지지 않게 최소 높이 설정 */
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+/* 실제 이미지 스타일 */
+.sample-graph {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 12px;
+}
+
+
+
+/* 이미지 로딩 실패 시 대비 */
+.sample-graph:not([src]), .sample-graph[src=""] {
+    width: 100%;
+    height: 300px;
+    background-color: #f3f4f6; /* 회색 박스로 표시 */
+    position: relative;
+}
+
+.graph-legend {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    justify-content: center;
+}
+
+.dot.g0 { color: #ffedd5; } /* 오렌지 계열 */
+.dot.g1 { color: #dcfce7; } /* 그린 계열 */
+.dot.g2 { color: #dbeafe; } /* 블루 계열 */
+.star { color: #374151; font-weight: bold; }
+
+/* 솔루션 아이템 디자인 (이미지 디자인 참고) */
+/* 오른쪽 피드백 영역 */
+.feedback-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.solution-item {
+    display: flex;
+    align-items: center;
+    padding: 25px 30px;
+    border-radius: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.step-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-right: 25px;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.sol-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #1f2937;
+}
+
+.sol-content p {
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+/* 색상별 스타일 (보내주신 사진 기반) */
+.solution-item.green {
+    background: linear-gradient(to right, #f0fdf4, #ffffff);
+    border-left: 6px solid #22c55e;
+}
+.solution-item.blue {
+    background: linear-gradient(to right, #eff6ff, #ffffff);
+    border-left: 6px solid #3b82f6;
+}
+.solution-item.purple {
+    background: linear-gradient(to right, #f5f3ff, #ffffff);
+    border-left: 6px solid #8b5cf6;
+}
+
+/* --- Reveal 애니메이션 핵심 CSS --- */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal-up {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/*-----------------------------------------------------------------*/
+
+/* 컨테이너 및 섹션 설정 */
+.nutrient-container {
+    background: transparent !important; /* 배경 삭제 */
+    backdrop-filter: none !important;
+    padding: 120px 20px 0 20px; /* 푸터와 붙이기 위해 하단 패딩 조절 */
+);
+
+    backdrop-filter: blur(0px); /* 레이어 분리 느낌 */
+    /* 헤더 높이를 고려하여 상단 여백을 120px 정도로 넉넉히 줍니다 */
+    padding: 120px 20px 60px 20px;
+}
+
+.nutrient-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 상단 텍스트 스타일 */
+.section-header {
+    text-align: center;
+    margin-bottom: 64px; /* mb-16 */
+}
+
+.section-title {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.section-subtitle {
+    font-size: 1.125rem; /* text-lg */
+    color: #6b7280; /* text-gray-500 */
+}
+
+/* 그리드 레이아웃 */
+.nutrient-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 기본 1열 (모바일) */
+    gap: 32px; /* gap-8 */
+}
+
+/* 카드 개별 스타일 */
+.nutrient-card {
+    background: #f9fafb; /* 가독성을 위한 연한 배경색 추가 가능 */
+    padding: 32px;
+    border-radius: 16px;
+    transition: transform 0.2s ease;
+}
+
+.quote {
+    color: #374151; /* text-gray-700 */
+    line-height: 1.625;
+    font-size: 1.125rem;
+    font-style: italic;
+}
+
+/* 카드 하단 정보 섹션 */
+.card-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 32px; /* mt-8 */
+}
+
+/* 푸터 영역(아이콘+이름) 정렬 */
+.card-footer-v2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: flex-start; /* 왼쪽 정렬 확인 */
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    margin-right: 12px;
+    font-size: 1.25rem;
+}
+
+/* 아이콘 박스 배경색 커스텀 */
+.bg-orange { background-color: #ffedd5; }
+.bg-blue { background-color: #eff6ff; }
+.bg-green { background-color: #f0fdf4; }
+
+.info-name {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 700;
+    color: #000;
+}
+
+.info-desc {
+    font-size: 0.75rem; /* text-xs */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+/* 미디어 쿼리: 태블릿 및 데스크톱 (md) */
+@media (min-width: 768px) {
+    .nutrient-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3열로 변경 */
+    }
+}
+
+/*------------------------------------------------------------*/
+
+/* 영양소 하이라이트 섹션 */
+.nutrient-highlights {
+    background: transparent !important; /* 배경 삭제 */
+    backdrop-filter: none !important;
+    padding: 60px 40px; /* 상하 여백만 유지 */
+    );
+
+    backdrop-filter: blur(0px); /* 레이어 분리 느낌 */
+}
+
+.nutrient-grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 모바일 1열 */
+    gap: 24px;
+}
+
+/* 카드 개별 스타일 (이미지 스타일 재현) */
+.nutrient-card-v2 {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.nutrient-card-v2:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.nutrient-quote {
+    font-size: 1.15rem;
+    color: #111;
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 60px;
+}
+
+/* 하단 프로필 영역 스타일 */
+.card-footer-v2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatar-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* 배경색 클래스 */
+.bg-orange { background-color: #fff1eb; }
+.bg-blue { background-color: #f0f7ff; }
+.bg-green { background-color: #f0fdf4; }
+
+
+/* 2. 영양소 이름(단백질, 지방, 나트륨) 왼쪽 정렬 및 스타일 */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+.user-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0;
+    /* 밑줄 효과가 나타나지 않도록 설정 */
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* 3. 마우스 호버 시에도 밑줄이 생기지 않도록 방지 */
+.nutrient-card-v2:hover .user-name,
+.user-name:hover {
+    text-decoration: none !important;
+    border: none !important;
+}
+
+/* 4. 카드 전체 레이아웃 미세 조정 */
+.nutrient-card-v2 {
+    background: #ffffff;
+    border: 1px solid #f2f2f7;
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+    text-align: left; /* 카드 내 모든 텍스트 기본 왼쪽 정렬 */
+}
+
+.nutrient-quote {
+    font-size: 1.05rem;
+    color: #4b5563;
+    line-height: 1.7;
+    font-weight: 400;
+    margin-bottom: 40px;
+    text-align: left; /* 설명글도 왼쪽 정렬 */
+}
+
+/* index_style.css 하단에 추가 */
+.reveal-left.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* 푸터 섹션 설정 */
+.footer-section {
+    /* 1. 화면 전체를 차지하지 않도록 높이를 내용만큼만 설정 */
+    height: auto;
+    min-height: 200px; /* 푸터 최소 높이 */
+
+    /* 2. 자석 효과(스냅)를 푸터의 '하단' 기준에 맞춤 */
+    scroll-snap-align: end;
+
+    /* 3. 상단 콘텐츠와 겹치지 않도록 레이아웃 정렬 */
+    display: block;
+    background: transparent !important;
+}
+
+/* 푸터 바로 위의 콘텐츠 섹션 */
+.scroll-section:not(.footer-section) {
+    height: 100vh;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    /*overflow: hidden;*/
+}
+
+.scroll-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 20% 30%,
+        rgba(255,255,255,0.4),
+        transparent 40%
+    );
+
+    z-index: 0;
+}
+
+/* 푸터 내부 스타일 (기존 유지) */
+.site-footer {
+    width: 100%;
+    padding: 40px 0; /* 여백을 적절히 조절하세요 */
+}
+
+
+/* 반응형 데스크톱 (3열) */
+@media (min-width: 1024px) {
+    .nutrient-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+

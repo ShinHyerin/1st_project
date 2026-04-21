@@ -1,0 +1,368 @@
+/* 1. 기본 설정 (Reset & Base) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    color: #1f2937;
+    font-family: 'Inter', 'Pretendard', sans-serif; /* 한국어 폰트 추가 */
+    overflow-x: hidden;
+}
+
+/* 2. 네비게이션 바 */
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+
+    /* 핵심 */
+    background: rgba(255, 255, 255, 0.6); /* 반투명 */
+    backdrop-filter: blur(10px);          /* 블러 */
+    -webkit-backdrop-filter: blur(10px);  /* 사파리 대응 */
+
+    padding: 24px 40px;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #111;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.logo-icon { margin-right: 8px; }
+
+.nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center; /* 아이템 세로 중앙 정렬 */
+}
+
+.nav-item {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.nav-item:hover { color: #000000; }
+
+/* 다시 검사하기 버튼 스타일 */
+.nav-item.highlight {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.nav-item.highlight:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+/* 사용자 정보 영역 전체를 묶는 컨테이너 */
+.user-group {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* 전체 항목 간격 */
+    flex-wrap: nowrap;
+}
+
+/* [추가] 나의 기록 링크 스타일: 회색 + 작은 글씨 */
+.history-link {
+
+    color: #9ca3af  /* 연한 회색 */
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+
+    font-size: 0.8rem;
+
+
+    flex-shrink: 0;
+}
+
+.history-link:hover {
+    color: #4b5563 !important; /* 호버 시 약간 진한 회색 */
+    text-decoration: underline;
+}
+
+
+/* 이름 링크 영역 */
+.user-info {
+    display: inline-flex; /* 내부 아이템들을 가로로 나열 */
+    align-items: center;
+    text-decoration: none;
+    color: #374151;
+    white-space: nowrap; /* [필수] 텍스트가 절대 아래로 떨어지지 않게 함 */
+    flex-shrink: 0; /* 공간이 부족해도 크기를 줄이지 않음 */
+}
+
+.user-name {
+    font-weight: 700;
+    color: #000;
+    margin-right: 2px; /* 이름과 '님' 사이 미세 간격 */
+}
+
+.user-info:hover .user-name {
+    color: #4b5563;
+    text-decoration: underline;
+}
+
+.login-btn {
+    padding: 8px 16px;
+    background-color: #000;
+    color: #fff !important;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.login-btn:hover {
+    background-color: #333;
+}
+
+/* 로그아웃 버튼 */
+.logout-link {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    text-decoration: none;
+    flex-shrink: 0; /* 로그아웃 글자도 찌그러지지 않게 함 */
+}
+
+.logout-link:hover {
+    color: #ef4444;
+}
+
+/* 3. 공통 버튼 스타일 */
+.btn {
+    padding: 14px 36px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-black { background: black; color: white; border: none; }
+.btn-black:hover { background: #333; }
+
+.btn-outline { background: white; color: black; border: 1px solid #e5e7eb; }
+.btn-outline:hover { background: #f9fafb; }
+
+
+/* 분석하러 가기 버튼 전용 (강조형) */
+.highlight-btn {
+    background-color: #111827; /* 검은색 배경 */
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.highlight-btn:hover {
+    background-color: #374151;
+}
+
+/* 네비게이션 아이템 간격 */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* 버튼 사이의 간격 */
+}
+
+/* 로그인 버튼 (텍스트 위주) */
+.login-btn {
+    font-weight: 500;
+    color: #4b5563;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+/* 네비게이션 아이템 공통 줄바꿈 방지 */
+.nav-item {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap; /* 여기에도 추가하면 안전합니다 */
+}
+
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+}
+
+
+/* 햄버거 버튼 */
+.hamburger {
+    display: none; /* 기본은 숨김 (데스크탑) */
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 12px;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+/* 햄버거 줄 */
+.hamburger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #111; /* 애플 느낌 블랙 */
+
+    margin: 0 auto;
+    border-radius: 2px;
+
+    transition: all 0.3s ease;
+}
+
+/* hover 효과 */
+.hamburger:hover {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.05);
+}
+
+/* 활성화 (X로 변환) */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-links a:not(.highlight-btn):not(.login-btn) {
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+
+
+
+.nav-links a:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+/* 4. 푸터 스타일 (중복 제거 및 통합) */
+.footer-section {
+    height: auto;
+    min-height: 200px;
+    scroll-snap-align: end;
+    background-color: #f9fafb;
+    border-top: 1px solid #f3f4f6;
+}
+
+.site-footer {
+    width: 100%;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.copyright {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-bottom: 32px;
+}
+
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    opacity: 0.3;
+    filter: grayscale(100%);
+    gap: 8px;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #000;
+}
+
+
+
+/* 5. 공통 반응형 설정 */
+@media (max-width: 768px) {
+    .navbar { padding: 20px; }
+    .nav-links { display: none; } /* 모바일에서 메뉴 숨김 */
+}
+
+
+@media (max-width: 768px) {
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+
+        width: 220px;
+
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+
+        border-radius: 16px;
+        padding: 16px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+
+        transition: all 0.3s ease;
+    }
+
+    .nav-links.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+}
